@@ -121,8 +121,8 @@
 				// setTimeoutを利用して重い処理を遅延実行することで、
 				// 一旦ブラウザに処理を戻しの描画を行う。
 				window.setTimeout(function heavyProcess() {
-					console.log(targetIndex);
-					// 重たい処理を行う
+
+					// ここで、重たい処理を行う
 					// ここではとりあえずデータの中身を出力してる
 					$text.textContent += dataList[targetIndex] + ',';
 					
