@@ -132,10 +132,11 @@
 					// 最終データか判定する
 					if ((targetIndex + 1) >= dataCount) {
 						// 最終データの場合
-						// 実行中フラグを寝かせ、ボタンの表示を変更する
+						// 実行中フラグを寝かせ、ボタンの表示を変更する、対象行インデックスの初期化
 						isRun = false;
 						$button.value = '開始';
 						$button.className = 'off';
+						targetIndex = 0;
 					} else {
 						// 最終データでない場合
 						// 次のデータのためインデックスは+1する
