@@ -1,0 +1,172 @@
+<!DOCTYPE html>
+<html lang="jp">
+<!-- ヘッダー -->
+<head>
+	<meta charset="UTF-8">
+	<title>進捗表示：パターン３</title>
+	<!-- CSSの設定 -->
+	<style>
+		body {
+			width:				95%;
+			margin:				8px auto;
+		}
+		#progress {
+			width:				100%;
+			height:				3.8em;
+			margin:				8px auto;
+		}
+		.txt_area {
+			height:				3.8em;
+			line-height:			1.3em;
+			letter-spacing:			0.15em;
+			padding:			8px;
+			margin-bottom:			8px;
+			border:				2px solid #c0c0c0;
+			border-radius:			4px;
+			word-wrap:			break-word;
+		}
+		.txt_area .txt {
+			height:				inherit;
+			padding:			1px 1px 0 1px;
+			overflow:			hidden;
+			word-wrap:			break-word;
+		}
+		#btn {
+			color:				#ffffff;
+			font-size:			24px;
+			font-weight:			700;
+			text-shadow: 			0 1px 1px rgba(0, 0, 0, .5);
+			padding:			16px 32px;
+			background:			-webkit-linear-gradient(top, #87ceeb, #1e90ff);
+			background:			linear-gradient(to bottom, #87ceeb, #1e90ff);
+			border:				1px solid #00008b;
+			border-radius: 			4px;
+			-webkit-transition:		none;
+			transition:			none;
+		}
+		#btn.off {
+			background:			-webkit-linear-gradient(top, #87ceeb, #1e90ff);
+			background:			linear-gradient(to bottom, #87ceeb, #1e90ff);
+			border:				1px solid #00008b;
+		}
+		#btn.off:hover {
+			color:				#00008b;
+			text-shadow: 			0 1px 1px rgba(255, 255, 255, .5);
+		}
+		#btn.off:active {
+			text-shadow: 			0 1px 1px rgba(0, 0, 0, .5);
+			box-shadow:			inset 0 3px 5px rgba(0, 0, 0, .2);
+		}
+		#btn.on {
+			background:			-webkit-linear-gradient(top, #ff00ff, #c71585);
+			background:			linear-gradient(to bottom, #ff00ff, #c71585);
+			border:				1px solid #800000;
+		}
+		#btn.on:hover {
+			color:				#800000;
+			text-shadow: 			0 1px 1px rgba(255, 255, 255, .5);
+		}
+		#btn.on:active {
+			text-shadow: 			0 1px 1px rgba(0, 0, 0, .5);
+			box-shadow:			inset 0 3px 5px rgba(0, 0, 0, .2);
+		}
+	</style>
+</head>
+
+<!-- ボディ -->
+<body>
+	<p><a href="index.html">インデックスへ戻る</a></p>
+	<!-- 進捗バー -->
+	<progress id="progress" value="0" max="100"></progress>
+	<!-- 画面に出力するテキストの表示領域 -->
+	<div class="txt_area">
+		<span id="text" class="txt"></span>
+	</div>
+	<!-- 開始ボタン -->
+	<input id="btn" class="off" type="button" value="開始"/>
+
+	<!-- JavaScript本体 -->
+	<script>
+		(function () {
+			// DOM要素
+			var $progress = document.getElementById("progress");
+			var $text = document.getElementById("text");
+			var $button = document.getElementById("btn");
+
+			// データ（適当なデータ）
+			var dataCount = 1000;			// ←setTimeoutで指定する関数から使用するため var で宣言（letだとだめ）
+			var dataList = new Array(dataCount);	// ←setTimeoutで指定する関数から使用するため var で宣言（letだとだめ）
+			for (let i = 0; i < dataCount; i++) {
+				dataList[i] = i + 1;
+			}
+			
+			// 実行中フラグ
+			var isRun = false;			// ←setTimeoutで指定する関数から使用するため var で宣言（letだとだめ）
+
+			// （async/awiteでは不要）現在の対象行のインデックス
+			// var targetIndex = 0;			// ←setTimeoutで指定する関数から使用するため var で宣言（letだとだめ）
+
+			// 重たい処理の一つ分の処理をまとめた関数
+			function heavyProcessForUnit(index) {
+				// 非同期処理を行うため Promise を返却し、その中で処理を行う
+				// resolveは正常終了時の関数、rejectは異常終了時の関数を示すけど、
+				// 詳しくは Promise のコンストラクタ参照してね
+				return new Promise((resolve, reject) => {
+
+					// setTimeoutを用いて実行しないと、処理をキューに分割できないからsetTimeout使用
+					setTimeout(()=>{
+
+						// 重たい処理を行う
+						// ここではとりあえずデータの中身を出力してる
+						$text.textContent += dataList[index] + ',';
+						
+						// 進捗率を表示する
+						progress.value = (index + 1) / dataCount * 100;
+						
+						// 最終データか判定する
+						if ((index + 1) >= dataCount) {
+							// 最終データの場合
+							// 実行中フラグを寝かせ、ボタンの表示を変更する
+							isRun = false;
+							$button.value = '開始';
+							$button.className = 'off';
+						}
+						
+						// 正常終了を通知するため resolve を呼び出す
+						resolve(0);
+						
+					}, 0);	// ← setTimeout の終了
+				});		// ← return new Promise の終了
+			}			// ← function heavyProcessForUnit の終了
+
+			// 非同期で実行する重い処理
+			async function heavyProcess() {
+				// 各データに対してループ処理
+				for (let i = 0; i < dataCount; i++) {
+					// Promisを返却する非同期処理を実行する
+					// awaitをつけて順番で処理されるようにしている。
+					//（重たい処理の一つ分の処理をまとめた関数の呼び出し）
+					await heavyProcessForUnit(i);
+				}
+			}
+
+			// 開始ボタンを押した時の処理
+			$button.onclick = function () {
+				// 実行中な何もしない
+				if (isRun) {
+					return;
+				}
+				
+				// 実行中フラグを立て、テキストエリアをクリア、ボタンの表示を変更する
+				isRun = true;
+				$text.textContent = '';
+				$button.value = '動作中';
+				$button.className = 'on';
+				
+				// 重たい処理を実行
+				heavyProcess();
+			}
+		})();
+	</script>
+</body>
+</html>
