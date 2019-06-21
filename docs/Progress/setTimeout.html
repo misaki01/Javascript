@@ -128,7 +128,7 @@
 					$text.textContent += dataList[targetIndex] + ',';
 					
 					// 進捗率を表示する
-					progress.value = (targetIndex + 1) / dataCount * 100;
+					$progress.value = (targetIndex + 1) / dataCount * 100;
 					
 					// 最終データか判定する
 					if ((targetIndex + 1) >= dataCount) {
@@ -143,7 +143,11 @@
 						// 次のデータのためインデックスは+1する
 						targetIndex++;
 						// 次のデータに対する処理をsetTimeoutで登録する
-						window.setTimeout(heavyProcess, 0);
+						// （setTimeoutのディレイを 0 にすると IE Edgeでは進捗バーが進まず、
+						// 　最後に一気に進むという問題がある。
+						// 　これは IE 固有のレンダリングの問題と考えられ、
+						// 　IEにおいてはちょっとの間がないと進捗バーのレンダリングが行われないものと推定される。）
+						window.setTimeout(heavyProcess, 50);
 					}
 				}, 0);
 			}
