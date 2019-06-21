@@ -120,7 +120,7 @@
 						$text.textContent += dataList[targetIndex] + ',';
 						
 						// 進捗率を表示する
-						progress.value = (targetIndex + 1) / dataCount * 100;
+						$progress.value = (targetIndex + 1) / dataCount * 100;
 						
 						// 最終データか判定する
 						if ((targetIndex + 1) >= dataCount) {
@@ -142,8 +142,12 @@
 							targetIndex++;
 							resolve(true);
 						}
-						
-					}, 0);	// ← setTimeout の終了
+
+					// （setTimeoutのディレイを 0 にすると IE Edgeでは進捗バーが進まず、
+					// 　最後に一気に進むという問題がある。
+					// 　これは IE 固有のレンダリングの問題と考えられ、
+					// 　IEにおいてはちょっとの間がないと進捗バーのレンダリングが行われないものと推定される。）
+					}, 50);	// ← setTimeout の終了
 				});		// ← return new Promise の終了
 			}			// ← function promiseForUnit の終了
 
