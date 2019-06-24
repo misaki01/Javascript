@@ -26,7 +26,7 @@
 			　　box-sizing は子要素に継承されないスタイルである）
 		*/
 		* {
-			font-family:				-apple-system,
+			font-family:					-apple-system,
 										BlinkMacSystemFont,
 										"Helvetica Neue",
 										YuGothic,
@@ -78,7 +78,7 @@
 			max-width:					1024px;
 			height:						100%;
 			margin:						0 auto;		/* 左右中央寄せ */
-			list-style-type:			none;		/* リストの「・」のスタイル設定（noneは表示なし） */ 
+			list-style-type:				none;		/* リストの「・」のスタイル設定（noneは表示なし） */ 
 		}
 		nav.menu > ul > li {
 			width:						20%;		/* 横並びにするため幅を 100÷メニューの数％ と指定 */
@@ -90,7 +90,7 @@
 			padding:					15px 20px;
 			font-size:					30px;
 			color:						#ffffff;
-			text-decoration:			none;
+			text-decoration:				none;
 			transition:					.5s;
 		}
 		nav.menu > ul > li > a > span {
@@ -99,14 +99,14 @@
 			display:					flex;
 			width:						100%;
 			height:						100%;
-			-webkit-justify-content:	center;
-			justify-content:			center;
-			-webkit-align-items:		center;
-			align-items:				center;
+			-webkit-justify-content:			center;
+			justify-content:				center;
+			-webkit-align-items:				center;
+			align-items:					center;
 		}
 		nav.menu > ul > li > a > span.cursiveFont {
 			/* Google Web Fonts のフォント */
-			font-family:				'Dancing Script', cursive;
+			font-family:					'Dancing Script', cursive;
 		}
 		nav.menu > ul > li > a:hover {
 			background:					rgba(0, 0, 0, .5);
@@ -174,7 +174,7 @@
 		.innerContent {
 			color:						#ffffff;
 			text-align:					center;
-			text-shadow:				5px 5px 5px #000000;
+			text-shadow:					5px 5px 5px #000000;
 		}
 		.center {
 			/* a タグ内容の要素を flexbox で上下左右中央寄せ */
@@ -182,17 +182,17 @@
 			display:					flex;
 			width:						100%;
 			height:						100%;
-			-webkit-justify-content:	center;
-			justify-content:			center;
-			-webkit-align-items:		center;
-			align-items:				center;
+			-webkit-justify-content:			center;
+			justify-content:				center;
+			-webkit-align-items:				center;
+			align-items:					center;
 		}
 		.slideContent h2 {
 			font-size:					52px;
-			font-family:				'Noto Serif JP', serif;
+			font-family:					'Noto Serif JP', serif;
 		}
 		.slideContent p {
-			font-family:				'Noto Serif JP', serif;
+			font-family:					'Noto Serif JP', serif;
 		}
 
 		/* ----------------------------------------------------------------------------------------------------------
@@ -209,14 +209,14 @@
 			border:						1px solid #ffffff;
 			background:					transparent;
 			color:						#ffffff;
-			text-decoration:			none;
-			text-shadow:				initial;
+			text-decoration:				none;
+			text-shadow:					initial;
 			text-align:					center;
 			transition:					.3s;
 		}
 		a.btn:hover {
 			color:						#000000;
-			text-decoration:			underline;
+			text-decoration:				underline;
 		}
 		/* hoverした時の白塗りアニメーションの設定、元となる白丸をボタン中央に配置 */
 		a.btn::after {
@@ -231,14 +231,14 @@
 			/* padding の % は縦方向でも width を基準にする性質を利用して、
 				要素の高さを width と同じになるように設定
 			*/
-			padding-top:				120%;
+			padding-top:					120%;
 			border:						100px solid rgba(255, 255, 255, 0);
-			border-radius:				50%;
+			border-radius:					50%;
 			transition:					.5s;
 		}
 		a.btn:hover::after {
-			border-width:				0;
-			border-color:				rgba(255, 255, 255, 1);
+			border-width:					0;
+			border-color:					rgba(255, 255, 255, 1);
 			background:					#ffffff;
 		}
 	</style>
