@@ -67,7 +67,7 @@
 			max-width:					1024px;
 			height:						100%;
 			margin:						0 auto;		/* 左右中央寄せ */
-			grid-template-columns:		repeat(auto-fit, minmax(calc(100px / 3), 1fr));
+			grid-template-columns:				repeat(auto-fit, minmax(calc(100px / 3), 1fr));
 		}
 		nav.menu > div > div > a {
 			display:					block;		/* li 要素全体がリンクとなるように幅、高さの設定 */
@@ -75,7 +75,7 @@
 			height:						100%;		/* li 要素全体がリンクとなるように幅、高さの設定 */
 			font-size:					30px;
 			color:						#ffffff;
-			text-decoration:			none;
+			text-decoration:				none;
 			transition:					.5s;
 		}
 		nav.menu > div > div > a > span {
@@ -83,12 +83,12 @@
 			display:					grid;
 			width:						100%;
 			height:						100%;
-			justify-content:			center;
-			align-items:				center;
+			justify-content:				center;
+			align-items:					center;
 		}
 		nav.menu > div > div > a > span.cursiveFont {
 			/* Google Web Fonts のフォント */
-			font-family:				'Dancing Script', cursive;
+			font-family:					'Dancing Script', cursive;
 		}
 		nav.menu > div > div > a:hover {
 			background:					rgba(0, 0, 0, .5);
@@ -115,26 +115,26 @@
 		.gridContent1 {
 			display:					grid;
 			border:						2px solid #373dff;
-			background-color:			#8e8f9e;
-			grid-template-columns:		repeat(3, 1fr);
-			grid-template-rows:			auto;
+			background-color:				#8e8f9e;
+			grid-template-columns:				repeat(3, 1fr);
+			grid-template-rows:				auto;
 		}
 		.gridContent1 > div {
 			border:						2px solid #373dff;
-			background-color:			#6877da;
+			background-color:				#6877da;
 			padding:					1em;
 		}
 		/* Gridのレイアウト設定 */
 		.gridContent1 .type1 {
-			grid-column-start:			1;
-			grid-column-end:			4;
-			grid-row-start:				1;
-			grid-row-end:				2;
+			grid-column-start:				1;
+			grid-column-end:				4;
+			grid-row-start:					1;
+			grid-row-end:					2;
 		}
 		.gridContent1 .type2 {
-			grid-column-start:			1;
-			grid-row-start:				2;
-			grid-row-end:				4;
+			grid-column-start:				1;
+			grid-row-start:					2;
+			grid-row-end:					4;
 		}
 
 		/* Grid-auto-fill の設定 */
@@ -143,12 +143,12 @@
 			display:					grid;
 			width:						100%;
 			border:						2px solid #373dff;
-			background-color:			#8e8f9e;
-			grid-template-columns:		repeat(auto-fill, minmax(150px, 1fr));
+			background-color:				#8e8f9e;
+			grid-template-columns:				repeat(auto-fill, minmax(150px, 1fr));
 		}
 		.gridContent2 > div {
 			border:						2px solid #373dff;
-			background-color:			#6877da;
+			background-color:				#6877da;
 			padding:					1em;
 		}
 
@@ -158,12 +158,12 @@
 			display:					grid;
 			width:						100%;
 			border:						2px solid #373dff;
-			background-color:			#8e8f9e;
-			grid-template-columns:		repeat(auto-fit, minmax(150px, 1fr));
+			background-color:				#8e8f9e;
+			grid-template-columns:				repeat(auto-fit, minmax(150px, 1fr));
 		}
 		.gridContent3 > div {
 			border:						2px solid #373dff;
-			background-color:			#6877da;
+			background-color:				#6877da;
 			padding:					1em;
 		}
 
