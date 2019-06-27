@@ -1,409 +1,457 @@
 <!DOCTYPE html>
-<html lang="jp">
+<html lang="ja">
+<!-- ローカル環境のファイルで実行することを想定しているため[http:/https:]の省略はしない -->
 <head>
-	<meta charset="UTF-8">
-	<meta name="viewport" content="width=device-width,initial-scale=1">
-	<title>スクロールデザイン_紙芝居的・縦スクロール</title>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>スクロールデザイン_紙芝居的・縦スクロール</title>
 
-	<!-- CSSの読み込み -->
-	<!-- ↓↓↓ Awesome：アイコンとかを提供してくれてる便利なやつ、無料で提供されてるけど有料版もある ↓↓↓ -->
-	<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
-	<style>
-		/* ----------------------------------------------------------------------------------------------------------
-			リセット CSS
-		------------------------------------------------------------------------------------------------------------- */
-		/* リセット CSS
-			全ての要素に対して初期化を行う。
-			（リセットすることでブラウザ事に異なってる初期値を統一することができ、表示が一定となる）
-			
-			また、疑似要素の ::before、::after については * で指定しても適用されない場合がある（※）
-			そのため * に加えて全ての要素の before と after についても初期化を行う。
-			※子要素に継承されるスタイルについては * のみでも before、after にも適用される。
-			　子要素に継承されないスタイルについては * のみでなく、別途 before、after を指定して設定する必要がある。
-			　（下記の例において、font-familyは子要素に継承されるスタイルであり、
-			　　box-sizing は子要素に継承されないスタイルである）
-		*/
-		* {
-			font-family:				-apple-system,
-									BlinkMacSystemFont,
-									"Helvetica Neue",
-									YuGothic,
-									"ヒラギノ角ゴ ProN W3",
-									Hiragino Kaku Gothic ProN,
-									Arial,
-									"メイリオ",
-									Meiryo,
-									sans-serif;
-		}
-		*, *::before, *::after {
-			/* width, height の指定において、padding と border の幅、高さも含めるという設定
-				デフォルト（content-box）では 指定した width, height に、
-				padding と border の幅、高さが加算された値が実際のサイズになる
-			*/
-			box-sizing:				border-box;
-			margin:					0;
-			padding:				0;
-		}
+  <!-- CSSの読み込み 
+    （CSSのチェックツールで指摘されたため「type="text/css"」を追加、でもGoogleのコーディングガイドでは不要になってる）
+  -->
+  <!-- ↓↓↓ Awesome：アイコンとかを提供してくれてる便利なやつ、無料で提供されてるけど有料版もある ↓↓↓ -->
+  <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" type="text/css">
+  <style>
+    /* ----------------------------------------------------------------------------------------------------------
+      リセット CSS
+    ------------------------------------------------------------------------------------------------------------- */
+    /* リセット CSS
+      全ての要素に対して初期化を行う。
+      （リセットすることでブラウザ事に異なってる初期値を統一することができ、表示が一定となる）
+      
+      また、疑似要素の ::before、::after については * で指定しても適用されない場合がある（※）
+      そのため * に加えて全ての要素の before と after についても初期化を行う。
+      ※子要素に継承されるスタイルについては * のみでも before、after にも適用される。
+      　子要素に継承されないスタイルについては * のみでなく、別途 before、after を指定して設定する必要がある。
+      　（下記の例において、font-familyは子要素に継承されるスタイルであり、
+      　　box-sizing は子要素に継承されないスタイルである）
+    */
+    * {
+      font-family: BlinkMacSystemFont,
+                   "Helvetica Neue",
+                   YuGothic,
+                   "ヒラギノ角ゴ ProN W3",
+                   "Hiragino Kaku Gothic ProN",
+                   Arial,
+                   "メイリオ",
+                   Meiryo,
+                   sans-serif;
+    }
 
-		/* ----------------------------------------------------------------------------------------------------------
-			html、body要素の設定
-		------------------------------------------------------------------------------------------------------------- */
-		/* ページ全体に対する初期設定
-			スタイルの継承における最上位の親に対する初期値の設定を行う。
-		*/
-		body {
-			font:					large/100%;
-		}
+    *,
+    *::before,
+    *::after {
+      /* width, height の指定において、padding と border の幅、高さも含めるという設定
+        デフォルト（content-box）では 指定した width, height に、
+        padding と border の幅、高さが加算された値が実際のサイズになる
+      */
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
 
-		/* ----------------------------------------------------------------------------------------------------------
-			メニューの設定
-		------------------------------------------------------------------------------------------------------------- */
-		nav.menu {
-			position:				fixed;
-			top:					0;
-			left:					0;
-			z-index:				99;
-			width:					100%;
-			height:					60px;		/* メニューの高さを数値で設定 */
-			background:				linear-gradient(
-										to bottom,
-										rgba(0, 0, 0, .2),
-										rgba(0, 0, 0, .6));
-			transition:				.2s
-		}
-		nav.menu > ul {
-			max-width:				1024px;
-			height:					100%;
-			margin:					0 auto;		/* 左右中央寄せ */
-			list-style-type:			none;		/* リストの「・」のスタイル設定（noneは表示なし） */ 
-		}
-		nav.menu > ul > li {
-			width:					20%;		/* 横並びにするため幅を 100÷メニューの数％ と指定 */
-			height:					100%;
-			float:					left;
-		}
-		nav.menu > ul > li > a {
-			display:				block;		/* li 要素全体がリンクとなるように幅、高さの設定 */
-			width:					100%;		/* li 要素全体がリンクとなるように幅、高さの設定 */
-			height:					100%;		/* li 要素全体がリンクとなるように幅、高さの設定 */
-			padding:				15px 20px;
-			font-weight:				bold;
-			color:					#ffffff;
-			transition:				.5s;
-		}
-		nav.menu > ul > li > a > p {
-			/* a タグ内容の要素を上下左右中央寄せにする設定 */
-			display:				inline-block;
-			position:				relative;
-			top:					50%;
-			left:					50%;
-			transform:				translateY(-50%) translateX(-50%);
-		}
-		nav.menu > ul > li > a:hover {
-			background:				rgba(0, 0, 0, .5);
-		}
 
-		/* ----------------------------------------------------------------------------------------------------------
-			スライドコンテンツの設定
-		------------------------------------------------------------------------------------------------------------- */
-		.slideContent {
-			/* vh はViewportの高さ（ブラウザの高さ）の％指定、
-				この設定でスライド1枚単位の幅、高さをブラウザの画面サイズに一致させている。
-				（vw はViewportの幅（ブラウザの幅）の％指定であるが、
-				　これは縦のスクロールバーも含めた幅となり、縦スクロールバーの幅分はみ出してしまうため、
-				　横のスクロールバーの表示しまう問題がある。そのため％で指定している）
-			*/
-			width:					100%;
-			height:					100vh;
-		}
-		.slideContent > div {
-			position:				relative;
-			width:					100%;
-			height:					100%;
-		}
-		/* 奇数の要素だけ背景をスクロールしないように固定 （これがスライドのポイント） */
-		.slideContent > div:nth-of-type(odd) {
-			background-attachment:			fixed;
-		}
-		.slideContent > div:last-of-type {
-			z-index:				-2;
-			background-attachment:			fixed;
-		}
-		.slideContent > div:last-of-type .innerContent {
-			z-index:				-1;
-		}
-		.slideContent .type1 {
-			background:				linear-gradient(
-									to bottom,
-									#373dff,
-									#fb9168);
-		}
-		.slideContent .type2 {
-			background:				linear-gradient(
-									to right,
-									#373dff,
-									#8fd6ff);
-		}
-		.slideContent .type3 {
-			background:				radial-gradient(
-									circle,
-									#ff0000,
-									#fb9168 20%,
-									#8fd6ff);
-		}
-		.slideContent .type4 {
-			background:				linear-gradient(
-									to left,
-									#373dff,
-									#8fd6ff);
-		}
-		.slideContent .type5 {
-			background:				linear-gradient(
-									to top,
-									#373dff,
-									#fb9168);
-		}
+    /* ----------------------------------------------------------------------------------------------------------
+      html、body要素の設定
+    ------------------------------------------------------------------------------------------------------------- */
+    /* ページ全体に対する初期設定
+      スタイルの継承における最上位の親に対する初期値の設定を行う。
+    */
+    body {
+      font-size: large;
+      line-height: 100%;
+    }
 
-		/* ----------------------------------------------------------------------------------------------------------
-			スライドコンテンツの中身の設定
-		------------------------------------------------------------------------------------------------------------- */
-		.innerContent {
-			color:					#ffffff;
-			text-align:				center;
-			text-shadow:				5px 5px 5px #000000;
-		}
-		.center {
-			position:				relative;
-			top:					50%;
-			left:					50%;
-			transform:				translateY(-50%) translateX(-50%);
-		}
-		.innerContent .icon {
-			height:					120px;
-			padding:				0 0 20px;
-			font-size:				100px;
-			transition:				.8s;
-			transition-delay:			.4s;
-		}
-		.innerContent .text {
-			transition:				1.2s;
-			transition-delay:			.0s;
-		}
-		.innerContent .text .title {
-			font-size:				52px;
-			font-family:				YuGothic;
-		}
 
-		/* ----------------------------------------------------------------------------------------------------------
-			ボタン形式のリンク
-		------------------------------------------------------------------------------------------------------------- */
-		/* リンクをボタンっぽい見た目に成型 */
-		a.btn {
-			display:				inline-block;
-			position:				relative;
-			z-index:				2;
-			overflow:				hidden;
-			margin-top:				10px;
-			padding:				16px 10px;
-			border:					1px solid #ffffff;
-			background:				transparent;
-			color:					#ffffff;
-			text-decoration:			none;
-			text-shadow:				initial;
-			text-align:				center;
-			transition:				.3s;
-		}
-		a.btn:hover {
-			color:					#000000;
-			text-decoration:			underline;
-		}
-		/* hoverした時の白塗りアニメーションの設定、元となる白丸をボタン中央に配置 */
-		a.btn::after {
-			content:				"";
-			display:				block;
-			position:				absolute;
-			z-index:				-1;
-			top:					50%;
-			left:					50%;
-			transform:				translateY(-50%) translateX(-50%);
-			width:					120%;
-			/* padding の % は縦方向でも width を基準にする性質を利用して、
-				要素の高さを width と同じになるように設定
-			*/
-			padding-top:				120%;
-			border:					100px solid rgba(255, 255, 255, 0);
-			border-radius:				50%;
-			transition:				.5s;
-		}
-		a.btn:hover::after {
-			border-width:				0;
-			border-color:				rgba(255, 255, 255, 1);
-			background:				#ffffff;
-		}
+    /* ----------------------------------------------------------------------------------------------------------
+      メニューの設定
+    ------------------------------------------------------------------------------------------------------------- */
+    nav.menu {
+      background: linear-gradient(
+                    to bottom,
+                    rgba(0, 0, 0, .2),
+                    rgba(0, 0, 0, .6));
+      height: 60px; /* メニューの高さを数値で設定 */
+      left: 0;
+      position: fixed;
+      top: 0;
+      transition: .2s;
+      width: 100%;
+      z-index: 999;
+    }
 
-		/* ----------------------------------------------------------------------------------------------------------
-			ページトップへのボタン
-		------------------------------------------------------------------------------------------------------------- */
-		a.pageTop, a.page-top:visited {
-			color:					#f780a0;
-			text-decoration:			none;
-			text-shadow:				1px 1px 1px #000000;
-		}
-		a.pageTop .icon {
-			position:				relative;
-			padding-top:				10px;
-			padding-bottom:				20px;
-			font-size:				100px;
-			transition:				.1s;
-		}
-		a.pageTop:hover .icon {
-			animation:				pageTopAnimation .1s ease 0s infinite alternate;
-		}
-		@keyframes pageTopAnimation {
-			0% {
-				padding-top:			30px;
-				padding-bottom:			0px;
-			}
-			100% {
-				padding-top:			10px;
-				padding-bottom:			20px;
-			}
-		}
-	</style>
+    nav.menu > ul {
+      height: 100%;
+      list-style-type: none; /* リストの「・」のスタイル設定（noneは表示なし） */ 
+      margin: 0 auto;        /* 左右中央寄せ */
+      max-width: 1024px;
+    }
 
-	<!-- Javascriptの読み込み -->
-	<!-- ただの jQuery をCDNで読み込み -->
-	<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+    nav.menu > ul > li {
+      float: left;
+      height: 100%;
+      width: 20%; /* 横並びにするため幅を 100÷メニューの数％ と指定 */
+    }
+
+    nav.menu a {
+      background: transparent;
+      color: #fff;
+      display: block; /* li 要素全体がリンクとなるように幅、高さの設定 */
+      height: 100%;   /* li 要素全体がリンクとなるように幅、高さの設定 */
+      text-decoration: none;
+      transition: .5s;
+      width: 100%;    /* li 要素全体がリンクとなるように幅、高さの設定 */
+    }
+
+    nav.menu a:hover {
+      background: rgba(0, 0, 0, .5);
+      color: #fff;
+    }
+
+    nav.menu a:visited {
+      background: transparent;
+      color: #fff;
+    }
+
+    nav.menu a > span {
+      /* a タグ内容の要素を上下左右中央寄せにする設定 */
+      display: inline-block;
+      left: 50%;
+      position: relative;
+      top: 50%;
+      transform: translateY(-50%) translateX(-50%);
+    }
+
+    nav.menu span.icon {
+      font-size: 30px;
+    }
+
+    nav.menu span.text {
+      font-size: 30px;
+    }
+
+
+    /* ----------------------------------------------------------------------------------------------------------
+      スクロールコンテンツの設定
+    ------------------------------------------------------------------------------------------------------------- */
+    /* vh はViewportの高さ（ブラウザの高さ）の％指定、
+      この設定でスライド1枚単位の幅、高さをブラウザの画面サイズに一致させている。
+      （vw はViewportの幅（ブラウザの幅）の％指定であるが、
+      　これは縦のスクロールバーも含めた幅となり、縦スクロールバーの幅分はみ出してしまうため、
+      　横のスクロールバーの表示しまう問題がある。そのため％で指定している）
+    */
+    .scroll-content {
+      height: 100vh;
+      width: 100%;
+    }
+
+    .scroll-content > div {
+      position: relative;
+      height: 100%;
+      width: 100%;
+    }
+
+    /* 奇数の要素だけ背景をスクロールしないように固定 （これがスライドのポイント） */
+    .scroll-content > div:nth-of-type(odd) {
+      background-attachment:      fixed;
+    }
+    .scroll-content > div:last-of-type {
+      z-index:        -2;
+      background-attachment:      fixed;
+    }
+    .scroll-content > div:last-of-type .inner-content {
+      z-index:        -1;
+    }
+
+    .scroll-content .type1 {
+      background: linear-gradient(
+                    to bottom,
+                    #373dff,
+                    #fb9168);
+    }
+    .scroll-content .type2 {
+      background: linear-gradient(
+                    to right,
+                    #373dff,
+                    #8fd6ff);
+    }
+    .scroll-content .type3 {
+      background: radial-gradient(
+                    circle,
+                    #ff0000,
+                    #fb9168 20%,
+                    #8fd6ff);
+    }
+    .scroll-content .type4 {
+      background: linear-gradient(
+                    to left,
+                    #373dff,
+                    #8fd6ff);
+    }
+    .scroll-content .type5 {
+      background: linear-gradient(
+                    to top,
+                    #373dff,
+                    #fb9168);
+    }
+
+
+    /* ----------------------------------------------------------------------------------------------------------
+      スクロールコンテンツの中身の設定
+    ------------------------------------------------------------------------------------------------------------- */
+    .inner-content {
+      background: rgba(0, 0, 0, 0);
+      color: #fff;
+      text-align: center;
+      text-shadow: 5px 5px 5px #000;
+    }
+
+    .center {
+      /* 上下左右中央寄せ */
+      position: relative;
+      top: 50%;
+      left: 50%;
+      transform: translateY(-50%) translateX(-50%);
+    }
+
+    .inner-content > .icon {
+      font-size: 100px;
+      height: 120px;
+      transition: .8s;
+      transition-delay: .4s;
+    }
+
+    .inner-content > .text {
+      transition: 1.2s;
+      transition-delay: 0s;
+      padding-top: 30px;
+    }
+
+    .inner-content > .text .title {
+      font-size: 52px;
+      padding-bottom: 30px
+    }
+
+
+    /* ----------------------------------------------------------------------------------------------------------
+      ボタン形式のリンク
+    ------------------------------------------------------------------------------------------------------------- */
+    /* リンクをボタンっぽい見た目に成型 */
+    a.btn {
+      background: transparent;
+      border: 1px solid #fff;
+      color: #fff;
+      display: inline-block;
+      margin-top: 10px;
+      overflow: hidden;
+      padding: 16px 10px;
+      position: relative;
+      text-align: center;
+      text-decoration: none;
+      text-shadow: initial;
+      transition: .3s;
+      z-index: 2;
+    }
+
+    a.btn:hover {
+      background: transparent;
+      color: #000;
+      text-decoration: underline;
+    }
+
+    /* hoverした時の白塗りアニメーションの設定、元となる白丸をボタン中央に配置 */
+    a.btn::after {
+      /* 白円を描画（横幅の120%の大きさ）
+        padding の % は縦方向でも width を基準にする性質を利用して、要素の高さを width と同じになるように設定
+      */
+      border: 100px solid rgba(255, 255, 255, 0);
+      border-radius: 50%;
+      content: "";
+      display: block;
+      padding-top: 120%;
+      width: 120%;
+      z-index: -1;
+      /* 上下左右方向の中央に配置 */
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translateY(-50%) translateX(-50%);
+      /* 白円の枠線幅のアニメーション用 */
+      transition: .5s;
+    }
+
+    a.btn:hover::after {
+      background: #fff;
+      border-width: 0;
+      border-color: rgba(255, 255, 255, 1);
+      color: #000;
+    }
+
+
+    /* ----------------------------------------------------------------------------------------------------------
+      ページトップへのボタン
+    ------------------------------------------------------------------------------------------------------------- */
+    a.page-top,
+    a.page-top:visited {
+      background: transparent;
+      color: #f780a0;
+      text-decoration: none;
+      text-shadow: 1px 1px 1px #000000;
+    }
+    a.page-top .icon {
+      font-size: 100px;
+      position: relative;
+      padding-top: 10px;
+      padding-bottom: 20px;
+      transition: .1s;
+    }
+    a.page-top:hover .icon {
+      animation: page-top-animation .1s ease 0s infinite alternate;
+    }
+    @keyframes page-top-animation {
+      0% {
+        padding-top: 30px;
+        padding-bottom: 0px;
+      }
+      100% {
+        padding-top: 10px;
+        padding-bottom: 20px;
+      }
+    }
+  </style>
+
+  <!-- Javascriptの読み込み -->
+  <!-- ただの jQuery をCDNで読み込み -->
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
 </head>
 
 <body>
-	<!-- 画面上部のメニュー -->
-	<!-- ontouchstart を指定することで、スマホからでも hover、active が効くようにする。
-		スマホの場合はタッチしてから次をタッチするまでの間に hover、active が効くようになる。
-	-->
-	<nav id="menu" class="menu" ontouchstart="">
-		<ul>
-			<li><a href="../index.html"><p>インデックスへ戻る</p></a></li>
-			<li><a href="../index.html"><p>サンプル２</p></a></li>
-			<li><a href="../index.html"><p>サンプル３</p></a></li>
-			<li><a href="../index.html"><p>サンプル４</p></a></li>
-			<li><a href="../index.html"><p>サンプル５</p></a></li>
-		</ul>
-	</nav>
-	
-	<!-- コンテンツ -->
-	<div class="slideContent">
-		<div class="type1">
-			<div class="innerContent center fadeOut">
-				<div class="text">
-					<h2 class="title">スクロールスタイルのサンプル</h2>
-					<p>
-						下記のHPを参考にして作成しています。<br/>
-						<a class="btn" href="http://weboook.blog22.fc2.com/blog-entry-415.html">weboook.blog22.fc2.com/blog-entry-415.html</a><br/>
-						<br/>
-						下にスクロールするとテキストがフェードアウトし、<br/>
-						上に戻るとフェードインするアニメーションを行います。<br/>
-					</p>
-					<br/>
-					<p>
-						[注意]iOSモバイル（iPhone等）だと background-attachment:fixed; に不具合があり動作しない。<br/>
-						対応するにはJavascriptでどうにかする必要がある。（単一ならposition::fixed;で対応することも可能）<br/>
-					</p>
-				</div>
-			</div>
-		</div>
-		<div class="type2">
-			<div class="innerContent center jumpOut">
-				<span class="icon fa fa-child"></span>
-				<div class="text">
-					<h2 class="title">２枚目のスライド</h2>
-					<p>
-						このページも参考になりました。<br/>
-						<a class="btn" href="https://webliker.info/css-selector-cheat-sheet/">CSSセレクタのチートシート</a><br/>
-					</p>
-				</div>
-			</div>
-		</div>
-		<div class="type3">
-			<div class="innerContent center jumpOut">
-				<span class="icon fa fa-file-text"></span>
-				<div class="text">
-					<h2 class="title">３枚目のスライド</h2>
-					<p>
-						スクロールすると透明度の切り替えで、テキスト⇒アイコンの順番で表示を行います。
-					</p>
-				</div>
-			</div>
-		</div>
-		<div class="type4">
-			<div class="innerContent center jumpOut">
-				<span class="icon fa fa-sort-amount-desc"></span>
-				<div class="text">
-					<h2 class="title">４枚目のスライド</h2>
-					<p>
-						テキスト、アイコンそれぞれで transition-delay の値を変えることで表示タイミングをずらしています。
-					</p>
-				</div>
-			</div>
-		</div>
-		<div class="type5">
-			<div class="innerContent center">
-				<div class="text">
-					<h2 class="title">最後のスライド</h2>
-					<p>↓のアイコンは一番上までスライドするボタン</p>
-					<a href="#" class="pageTop"><span class="icon fa fa-angle-double-up"></span></a>
-				</div>
-			</div>
-		</div>
-	</div>
+  <!-- 画面上部のメニュー -->
+  <nav id="menu" class="menu">
+    <ul>
+      <li><a href="../index.html"><span class="icon fa fa-reply"></span></a></li>
+      <li><a href="../index.html"><span class="text">戻る</span></a></li>
+      <li><a href="../index.html"><span class="text">ABC</span></a></li>
+      <li><a href="../index.html"><span class="text">XYZ</span></a></li>
+      <li><a href="../index.html"><span class="icon fa fa-star"></span></a></li>
+    </ul>
+  </nav>
 
-	<!-- Javascript -->
-	<script>
-	$(function() {
-		// メニューに関する処理
-		var menuHeight = $("#menu").height();
-		var startPosition = 0;
-		$(window).scroll(function() {
-			let currentPosition = $(this).scrollTop();
-			if (currentPosition > startPosition) {
-				if ($(window).scrollTop() >= 200) {
-					$("#menu").css("top", "-" + menuHeight + "px");
-				}
-			} else {
-				$("#menu").css("top", 0 + "px");
-			}
-			startPosition = currentPosition;
-		});
+  <!-- コンテンツ -->
+  <div class="scroll-content">
+    <div class="type1">
+      <div class="inner-content center fadeOut">
+        <div class="text">
+          <h1 class="title">スクロールスタイルのサンプル</h1>
+          <p>
+            下記のHPを参考にして作成しています。
+            <br/><a class="btn" href="http://weboook.blog22.fc2.com/blog-entry-415.html">weboook.blog22.fc2.com/blog-entry-415.html</a>
+            <br/>
+            <br/>下にスクロールするとテキストがフェードアウトし、
+            <br/>上に戻るとフェードインするアニメーションを行います。
+          </p>
+          <br/>
+          <p>
+            [注意]iOSモバイル（iPhone等）だと background-attachment:fixed; に不具合があり動作しない。<br/>
+            対応するにはJavascriptでどうにかする必要がある。（単一ならposition::fixed;で対応することも可能）<br/>
+          </p>
+        </div>
+      </div>
+    </div>
+    <div class="type2">
+      <div class="inner-content center jumpOut">
+        <span class="icon fa fa-child"></span>
+        <div class="text">
+          <h1 class="title">２枚目のスライド</h1>
+          <p>
+            このページも参考になりました。
+            <br/><a class="btn" href="https://webliker.info/css-selector-cheat-sheet/">CSSセレクタのチートシート</a>
+          </p>
+        </div>
+      </div>
+    </div>
+    <div class="type3">
+      <div class="inner-content center jumpOut">
+        <span class="icon fa fa-file-text"></span>
+        <div class="text">
+          <h1 class="title">３枚目のスライド</h1>
+          <p>
+            スクロールすると透明度の切り替えで、テキスト⇒アイコンの順番で表示を行います。
+          </p>
+        </div>
+      </div>
+    </div>
+    <div class="type4">
+      <div class="inner-content center jumpOut">
+        <span class="icon fa fa-sort-amount-desc"></span>
+        <div class="text">
+          <h1 class="title">４枚目のスライド</h1>
+          <p>
+            テキスト、アイコンそれぞれで transition-delay の値を変えることで表示タイミングをずらしています。
+          </p>
+        </div>
+      </div>
+    </div>
+    <div class="type5">
+      <div class="inner-content center">
+        <div class="text">
+          <h1 class="title">最後のスライド</h1>
+          <p>
+            ↓のアイコンは一番上までスライドするボタン
+            <br/><a href="#" class="page-top"><span class="icon fa fa-angle-double-up"></span></a>
+          </p>
+        </div>
+      </div>
+    </div>
+  </div>
 
-		// コンテンツのアニメーション：fadeOutに関する処理
-		$(window).scroll(function() {
-			if($(window).scrollTop() >= ($(window).height() / 4)) {
-				$(".fadeOut").fadeOut();
-			} else {
-				$(".fadeOut").fadeIn();
-			}
-		});
+  <!-- Javascript -->
+  <script>
+    $(function() {
+      // メニューに関する処理
+      var menuHeight = $("#menu").height();
+      var startPosition = 0;
+      $(window).scroll(function() {
+        let currentPosition = $(this).scrollTop();
+        if (currentPosition > startPosition) {
+          if ($(window).scrollTop() >= 200) {
+            $("#menu").css("top", "-" + menuHeight + "px");
+          }
+        } else {
+          $("#menu").css("top", 0 + "px");
+        }
+        startPosition = currentPosition;
+      });
 
-		// コンテンツのアニメーション：jumpOutに関する処理
-		$(".jumpOut .icon, .jumpOut .text").css("opacity","0");
-		$(window).scroll(function() {
-			$(".jumpOut").each(function() {
-				if ($(window).scrollTop() > $(this).offset().top - ($(window).height() * 0.75)) {
-					$(".icon, .text", this).css("opacity", "1");
-					$(".icon", this).css("font-size", "100px");
-				} else {
-					$(".icon, .text", this).css("opacity", "0");
-					$(".icon", this).css("font-size", "20px");
-				}
-			});
-		});
+      // コンテンツのアニメーション：fadeOutに関する処理
+      $(window).scroll(function() {
+        if($(window).scrollTop() >= ($(window).height() / 4)) {
+          $(".fadeOut").fadeOut();
+        } else {
+          $(".fadeOut").fadeIn();
+        }
+      });
 
-		// ページの先頭へに関する処理
-		$(".pageTop").click(function() {
-			$('body, html').animate({ scrollTop: 0 }, 1000, "swing");
-			return false;
-		});
-	});
-	</script>
+      // コンテンツのアニメーション：jumpOutに関する処理
+      $(".jumpOut .icon, .jumpOut .text").css("opacity","0");
+      $(window).scroll(function() {
+        $(".jumpOut").each(function() {
+          if ($(window).scrollTop() > $(this).offset().top - ($(window).height() * 0.75)) {
+            $(".icon, .text", this).css("opacity", "1");
+            $(".icon", this).css("font-size", "100px");
+          } else {
+            $(".icon, .text", this).css("opacity", "0");
+            $(".icon", this).css("font-size", "20px");
+          }
+        });
+      });
+
+      // ページの先頭へに関する処理
+      $(".page-top").click(function() {
+        $('body, html').animate({ scrollTop: 0 }, 1000, "swing");
+        return false;
+      });
+    });
+  </script>
 </body>
 </html>
