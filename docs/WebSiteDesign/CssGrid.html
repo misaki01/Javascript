@@ -160,33 +160,33 @@
     }
 
     /* Grid-CSS Grid の設定 */
-    .gridContent1 {
+    .grid-content1 {
       display: grid;
       grid-template-columns: repeat(3, 1fr);
       grid-template-rows: auto;
     }
 
-    .gridContent1 .type1 {
+    .grid-content1 .type1 {
       grid-column-start: 1;
       grid-column-end:   4;
       grid-row-start:    1;
       grid-row-end:      2;
     }
 
-    .gridContent1 .type2 {
+    .grid-content1 .type2 {
       grid-column-start: 1;
       grid-row-start:    2;
       grid-row-end:      4;
     }
 
     /* Grid-auto-fill の設定 */
-    .gridContent2 {
+    .grid-content2 {
       display: grid;
       grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
     }
 
     /* Grid-auto-fit の設定 */
-    .gridContent3 {
+    .grid-content3 {
       display: grid;
       grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
     }
@@ -293,14 +293,14 @@
   <div class="content">
     <!-- CSS Grid -->
     <h1>CSS Grid</h1>
-    <div class="gridContent1">
+    <div class="grid-content1">
       <div class="type1">
         <div class="inner-content center">
           <h2>１</h2>
           <p>
-            参考のHP<br/>
-            <a class="btn" href="https://developer.mozilla.org/ja/docs/Web/CSS/CSS_Grid_Layout/Basic_Concepts_of_Grid_Layout">MDNのGrid Layoutの説明</a><br/>
-            <a class="btn" href="https://www.webprofessional.jp/difference-between-auto-fill-and-auto-fit/">auto-fill、and-auto-fitに関する記事</a><br/>
+            参考のHP
+            <br/><a class="btn" href="https://developer.mozilla.org/ja/docs/Web/CSS/CSS_Grid_Layout/Basic_Concepts_of_Grid_Layout">MDNのGrid Layoutの説明</a>
+            <br/><a class="btn" href="https://www.webprofessional.jp/difference-between-auto-fill-and-auto-fit/">auto-fill、and-auto-fitに関する記事</a>
           </p>
         </div>
       </div>
@@ -308,9 +308,9 @@
         <div class="inner-content center">
           <h2>２</h2>
           <p>
-            Awesome と Google Web Fonts<br/>
-            <a class="btn" href="https://www.pixelimage.jp/blog/2015/07/font_awesome.html">Awesome</a><br/>
-            <a class="btn" href="https://fonts.google.com">Google Web Fonts</a><br/>
+            Awesome と Google Web Fonts
+            <br/><a class="btn" href="https://www.pixelimage.jp/blog/2015/07/font_awesome.html">Awesome</a>
+            <br/><a class="btn" href="https://fonts.google.com">Google Web Fonts</a>
           </p>
         </div>
       </div>
@@ -328,7 +328,7 @@
         <div class="inner-content center">
           <h2>５</h2>
           <p>
-            <a class="btn" href="../index.html">インデックスに戻る</a><br/>
+            <a class="btn" href="../index.html">インデックスに戻る</a>
           </p>
         </div>
       </div>
@@ -336,7 +336,7 @@
 
     <!-- auto-fill -->
     <h1>auto-fillのサンプル<br/>広げたり縮めたりした時のFill</h1>
-    <div class="gridContent2">
+    <div class="grid-content2">
       <div class="inner-content center">
           <h2>１</h2>
       </div>
@@ -356,7 +356,7 @@
 
     <!-- auto-fit -->
     <h1>auto-fitのサンプル<br/>広げたり縮めたりした時のFit</h1>
-    <div class="gridContent3">
+    <div class="grid-content3">
       <div class="inner-content center">
           <h2>１</h2>
       </div>
