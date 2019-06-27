@@ -1,373 +1,367 @@
 <!DOCTYPE html>
-<html lang="jp">
+<html lang="ja">
+<!-- ローカル環境のファイルで実行することを想定しているため[http:/https:]の省略はしない -->
 <head>
-	<meta charset="UTF-8">
-	<meta name="viewport" content="width=device-width, initial-scale=1">
-	<title>CSS Grid</title>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>CSS Grid</title>
 
-	<!-- CSSの読み込み -->
-	<!-- ↓↓↓ Google Web Fonts[https://fonts.google.com]：かっこいいフォントを提供してくれる便利なやつ ↓↓↓ -->
-	<link href="https://fonts.googleapis.com/css?family=Dancing+Script|Noto+Serif+JP&display=swap" rel="stylesheet">
-	<!-- ↓↓↓ Awesome：アイコンとかを提供してくれてる便利なやつ、無料で提供されてるけど有料版もある ↓↓↓ -->
-	<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
-	<style>
-		/* ----------------------------------------------------------------------------------------------------------
-			リセット CSS
-		------------------------------------------------------------------------------------------------------------- */
-		/* リセット CSS
-			全ての要素に対して初期化を行う。
-			（リセットすることでブラウザ事に異なってる初期値を統一することができ、表示が一定となる）
-			
-			また、疑似要素の ::before、::after については * で指定しても適用されない場合がある（※）
-			そのため * に加えて全ての要素の before と after についても初期化を行う。
-			※子要素に継承されるスタイルについては * のみでも before、after にも適用される。
-			　子要素に継承されないスタイルについては * のみでなく、別途 before、after を指定して設定する必要がある。
-			　（下記の例において、font-familyは子要素に継承されるスタイルであり、
-			　　box-sizing は子要素に継承されないスタイルである）
-		*/
-		* {
-			font-family:					-apple-system,
-										BlinkMacSystemFont,
-										"Helvetica Neue",
-										YuGothic,
-										"ヒラギノ角ゴ ProN W3",
-										Hiragino Kaku Gothic ProN,
-										Arial,
-										"メイリオ",
-										Meiryo,
-										sans-serif;
-		}
-		*, *::before, *::after {
-			/* width, height の指定において、padding と border の幅、高さも含めるという設定
-				デフォルト（content-box）では 指定した width, height に、
-				padding と border の幅、高さが加算された値が実際のサイズになる
-			*/
-			box-sizing:					border-box;
-			margin:						0;
-			padding:					0;
-		}
+  <!-- CSSの読み込み 
+    （CSSのチェックツールで指摘されたため「type="text/css"」を追加、でもGoogleのコーディングガイドでは不要になってる）
+  -->
+  <!-- ↓↓↓ Google Web Fonts[https://fonts.google.com]：かっこいいフォントを提供してくれる便利なやつ ↓↓↓ -->
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Dancing+Script%7cNoto+Serif+JP&display=swap" type="text/css">
+  <!-- ↓↓↓ Awesome：アイコンとかを提供してくれてる便利なやつ、無料で提供されてるけど有料版もある ↓↓↓ -->
+  <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" type="text/css">
+  <style>
+    /* ----------------------------------------------------------------------------------------------------------
+      リセット CSS
+    ------------------------------------------------------------------------------------------------------------- */
+    /* リセット CSS
+      全ての要素に対して初期化を行う。
+      （リセットすることでブラウザ事に異なってる初期値を統一することができ、表示が一定となる）
+      
+      また、疑似要素の ::before、::after については * で指定しても適用されない場合がある（※）
+      そのため * に加えて全ての要素の before と after についても初期化を行う。
+      ※子要素に継承されるスタイルについては * のみでも before、after にも適用される。
+      　子要素に継承されないスタイルについては * のみでなく、別途 before、after を指定して設定する必要がある。
+      　（下記の例において、font-familyは子要素に継承されるスタイルであり、
+      　　box-sizing は子要素に継承されないスタイルである）
+    */
+    * {
+      font-family: /* -apple-system, */
+                   BlinkMacSystemFont,
+                   "Helvetica Neue",
+                   YuGothic,
+                   "ヒラギノ角ゴ ProN W3",
+                   "Hiragino Kaku Gothic ProN",
+                   Arial,
+                   "メイリオ",
+                   Meiryo,
+                   sans-serif;
+    }
 
-		/* ----------------------------------------------------------------------------------------------------------
-			メニューの設定（Gridを使用）
-		------------------------------------------------------------------------------------------------------------- */
-		nav.menu {
-			position:					fixed;
-			top:						0;
-			left:						0;
-			width:						100%;
-			height:						60px;		/* メニューの高さを数値で設定 */
-			z-index:					999;
-			background:					linear-gradient(
-											to bottom,
-											rgba(0, 0, 0, .2),
-											rgba(0, 0, 0, .6));
-		}
-		nav.menu > div {
-			display:					grid;
-			max-width:					1024px;
-			height:						100%;
-			margin:						0 auto;		/* 左右中央寄せ */
-			grid-template-columns:				repeat(auto-fit, minmax(calc(100px / 3), 1fr));
-		}
-		nav.menu > div > div > a {
-			display:					block;		/* li 要素全体がリンクとなるように幅、高さの設定 */
-			width:						100%;		/* li 要素全体がリンクとなるように幅、高さの設定 */
-			height:						100%;		/* li 要素全体がリンクとなるように幅、高さの設定 */
-			font-size:					30px;
-			color:						#ffffff;
-			text-decoration:				none;
-			transition:					.5s;
-		}
-		nav.menu > div > div > a > span {
-			/* a タグ内容の要素を flexbox で上下左右中央寄せ */
-			display:					grid;
-			width:						100%;
-			height:						100%;
-			justify-content:				center;
-			align-items:					center;
-		}
-		nav.menu > div > div > a > span.cursiveFont {
-			/* Google Web Fonts のフォント */
-			font-family:					'Dancing Script', cursive;
-		}
-		nav.menu > div > div > a:hover {
-			background:					rgba(0, 0, 0, .5);
-		}
+    *,
+    *::before,
+    *::after {
+      /* width, height の指定において、padding と border の幅、高さも含めるという設定
+        デフォルト（content-box）では 指定した width, height に、
+        padding と border の幅、高さが加算された値が実際のサイズになる
+      */
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
 
-		/* ----------------------------------------------------------------------------------------------------------
-			Gridコンテンツの設定
-		------------------------------------------------------------------------------------------------------------- */
-		.content {
-			position:					relative;
-			top:						60px;		/* メニューの高さ分空ける */
-			left						0;
-  			width:						100%;
-		}
-		.headerTitle {
-			position:					relative;
-			display:					grid;
-			margin-top:					30px;
-			font-size:					52px;
-			font-family:					'Noto Serif JP', serif;
-		}
 
-		/* Grid-CSS Grid の設定 */
-		.gridContent1 {
-			display:					grid;
-			border:						2px solid #373dff;
-			background-color:				#8e8f9e;
-			grid-template-columns:				repeat(3, 1fr);
-			grid-template-rows:				auto;
-		}
-		.gridContent1 > div {
-			border:						2px solid #373dff;
-			background-color:				#6877da;
-			padding:					1em;
-		}
-		/* Gridのレイアウト設定 */
-		.gridContent1 .type1 {
-			grid-column-start:				1;
-			grid-column-end:				4;
-			grid-row-start:					1;
-			grid-row-end:					2;
-		}
-		.gridContent1 .type2 {
-			grid-column-start:				1;
-			grid-row-start:					2;
-			grid-row-end:					4;
-		}
+    /* ----------------------------------------------------------------------------------------------------------
+      メニューの設定（Gridを使用）
+    ------------------------------------------------------------------------------------------------------------- */
+    nav.menu {
+      background: linear-gradient(
+                    to bottom,
+                    rgba(0, 0, 0, .2),
+                    rgba(0, 0, 0, .6));
+      height: 60px; /* メニューの高さを数値で設定 */
+      left: 0;
+      position: fixed;
+      top: 0;
+      width: 100%;
+      z-index: 999;
+    }
 
-		/* Grid-auto-fill の設定 */
-		.gridContent2 {
-			position:					relative;
-			display:					grid;
-			width:						100%;
-			border:						2px solid #373dff;
-			background-color:				#8e8f9e;
-			grid-template-columns:				repeat(auto-fill, minmax(150px, 1fr));
-		}
-		.gridContent2 > div {
-			border:						2px solid #373dff;
-			background-color:				#6877da;
-			padding:					1em;
-		}
+    nav.menu > div {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(calc(100px / 3), 1fr));
+      height: 100%;
+      margin: 0 auto; /* 左右中央寄せ */
+      max-width: 1024px;
+    }
 
-		/* Grid-auto-fit の設定 */
-		.gridContent3 {
-			position:					relative;
-			display:					grid;
-			width:						100%;
-			border:						2px solid #373dff;
-			background-color:				#8e8f9e;
-			grid-template-columns:				repeat(auto-fit, minmax(150px, 1fr));
-		}
-		.gridContent3 > div {
-			border:						2px solid #373dff;
-			background-color:				#6877da;
-			padding:					1em;
-		}
+    nav.menu a {
+      background: transparent;
+      color: #fff;
+      display: block; /* li 要素全体がリンクとなるように幅、高さの設定 */
+      height: 100%;   /* li 要素全体がリンクとなるように幅、高さの設定 */
+      text-decoration: none;
+      transition: .5s;
+      width: 100%;    /* li 要素全体がリンクとなるように幅、高さの設定 */
+    }
 
-		/* ----------------------------------------------------------------------------------------------------------
-			Gridコンテンツの中身の設定
-		------------------------------------------------------------------------------------------------------------- */
-		.innerContent {
-			color:						#ffffff;
-			text-align:					center;
-			text-shadow:					5px 5px 5px #000000;
-		}
-		.center {
-			/* a タグ内容の要素を flexbox で上下左右中央寄せ */
-			display:					-webkit-flex;
-			display:					flex;
-			width:						100%;
-			height:						100%;
-			-webkit-justify-content:			center;
-			justify-content:				center;
-			-webkit-align-items:				center;
-			align-items:					center;
-		}
-		.innerContent h2 {
-			font-size:					52px;
-			font-family:					'Noto Serif JP', serif;
-		}
-		.innerContent p {
-			font-family:					'Noto Serif JP', serif;
-		}
+    nav.menu a:hover {
+      background: rgba(0, 0, 0, .5);
+      color: #fff;
+    }
 
-		/* ----------------------------------------------------------------------------------------------------------
-			ボタン形式のリンク
-		------------------------------------------------------------------------------------------------------------- */
-		/* リンクをボタンっぽい見た目に成型 */
-		a.btn {
-			display:					inline-block;
-			position:					relative;
-			z-index:					2;
-			overflow:					hidden;
-			margin-top:					10px;
-			padding:					16px 10px;
-			border:						1px solid #ffffff;
-			background:					transparent;
-			color:						#ffffff;
-			text-decoration:				none;
-			text-shadow:					initial;
-			text-align:					center;
-			transition:					.3s;
-		}
-		a.btn:hover {
-			color:						#000000;
-			text-decoration:				underline;
-		}
-		/* hoverした時の白塗りアニメーションの設定、元となる白丸をボタン中央に配置 */
-		a.btn::after {
-			content:					"";
-			display:					block;
-			position:					absolute;
-			z-index:					-1;
-			top:						50%;
-			left:						50%;
-			transform:					translateY(-50%) translateX(-50%);
-			width:						120%;
-			/* padding の % は縦方向でも width を基準にする性質を利用して、
-				要素の高さを width と同じになるように設定
-			*/
-			padding-top:					120%;
-			border:						100px solid rgba(255, 255, 255, 0);
-			border-radius:					50%;
-			transition:					.5s;
-		}
-		a.btn:hover::after {
-			border-width:					0;
-			border-color:					rgba(255, 255, 255, 1);
-			background:					#ffffff;
-		}
-	</style>
+    nav.menu a:visited {
+      background: transparent;
+      color: #fff;
+    }
+
+    nav.menu a > span {
+      /* a タグ内容の要素を grid で上下左右中央寄せ */
+      align-items: center;
+      display: grid;
+      height: 100%;
+      justify-content: center;
+      width: 100%;
+    }
+
+    nav.menu span.icon {
+      font-size: 30px;
+    }
+
+    nav.menu span.txt {
+      /* Google Web Fonts のフォント */
+      font: 30px/100% 'Dancing Script', cursive;
+    }
+
+
+    /* ----------------------------------------------------------------------------------------------------------
+      Gridコンテンツの設定
+    ------------------------------------------------------------------------------------------------------------- */
+    /* 全般 */
+    .content {
+      left: 0;
+      position: relative;
+      top: 60px; /* メニューの高さ分空ける */
+      width: 100%;
+    }
+
+    .content > h1 {
+      display: grid;
+      font: 52px/100% 'Noto Serif JP', serif; /* Google Web Fonts のフォント */
+      margin-top: 30px;
+      position: relative;
+    }
+
+    .content > div {
+      background-color: #8e8f9e;
+      border: 2px solid #373dff;
+      color: #fff;
+    }
+
+    .content > div > div {
+      background-color: #6877da;
+      color: #fff;
+      border: 2px solid #373dff;
+      padding: 1em;
+    }
+
+    /* Grid-CSS Grid の設定 */
+    .gridContent1 {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      grid-template-rows: auto;
+    }
+
+    .gridContent1 .type1 {
+      grid-column-start: 1;
+      grid-column-end:   4;
+      grid-row-start:    1;
+      grid-row-end:      2;
+    }
+
+    .gridContent1 .type2 {
+      grid-column-start: 1;
+      grid-row-start:    2;
+      grid-row-end:      4;
+    }
+
+    /* Grid-auto-fill の設定 */
+    .gridContent2 {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+    }
+
+    /* Grid-auto-fit の設定 */
+    .gridContent3 {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+    }
+
+
+    /* ----------------------------------------------------------------------------------------------------------
+      Gridコンテンツの中身の設定
+    ------------------------------------------------------------------------------------------------------------- */
+    .inner-content {
+      background: rgba(0, 0, 0, 0);
+      color: #fff;
+      text-align: center;
+      text-shadow: 5px 5px 5px #000;
+    }
+
+    .inner-content.center {
+      /* 上下左右中央寄せ */
+      align-items: center;
+      height: 100%;
+      justify-content: center;
+      display: grid;
+      width: 100%;
+    }
+
+    .inner-content h2 {
+      /* Google Web Fonts のフォント */
+      font: 52px/150% 'Noto Serif JP', serif;
+    }
+    .inner-content p {
+      /* Google Web Fonts のフォント */
+      font-family: 'Noto Serif JP', serif;
+    }
+
+
+    /* ----------------------------------------------------------------------------------------------------------
+      ボタン形式のリンク
+    ------------------------------------------------------------------------------------------------------------- */
+    /* リンクをボタンっぽい見た目に成型 */
+    a.btn {
+      background: transparent;
+      border: 1px solid #fff;
+      color: #fff;
+      display: inline-block;
+      margin-top: 10px;
+      overflow: hidden;
+      padding: 16px 10px;
+      position: relative;
+      text-align: center;
+      text-decoration: none;
+      text-shadow: initial;
+      transition: .3s;
+      z-index: 2;
+    }
+
+    a.btn:hover {
+      background: transparent;
+      color: #000;
+      text-decoration: underline;
+    }
+
+    /* hoverした時の白塗りアニメーションの設定、元となる白丸をボタン中央に配置 */
+    a.btn::after {
+      /* 白円を描画（横幅の120%の大きさ）
+        padding の % は縦方向でも width を基準にする性質を利用して、要素の高さを width と同じになるように設定
+      */
+      border: 100px solid rgba(255, 255, 255, 0);
+      border-radius: 50%;
+      content: "";
+      display: block;
+      padding-top: 120%;
+      width: 120%;
+      z-index: -1;
+      /* 上下左右方向の中央に配置 */
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translateY(-50%) translateX(-50%);
+      /* 白円の枠線幅のアニメーション用 */
+      transition: .5s;
+    }
+
+    a.btn:hover::after {
+      background: #fff;
+      border-width: 0;
+      border-color: rgba(255, 255, 255, 1);
+      color: #000;
+    }
+  </style>
 </head>
 
-<!-- ontouchstart を指定することで、スマホからでも hover、active が効くようにする。
-	スマホの場合はタッチしてから次をタッチするまでの間に hover、active が効くようになる。
--->
-<body ontouchstart="">
-	<!-- 画面上部のメニュー -->
-	<nav id="menu" class="menu">
-		<div>
-			<div><a href="../index.html"><span class="fa fa-reply" /></a></div>
-			<div><a href="../index.html"><span class="fa fa-star fa-spin" /></a></div>
-			<div><a href="../index.html"><span class="cursiveFont">ABC</span></a></div>
-			<div><a href="../index.html"><span class="cursiveFont">XYZ</span></a></div>
-			<div><a href="../index.html"><span class="fa fa-spinner fa-pulse" /></a></div>
-		</div>
-	</nav>
+<body>
+  <!-- 画面上部のメニュー -->
+  <nav class="menu">
+    <div>
+      <a href="../index.html"><span class="icon fa fa-reply"></span></a>
+      <a href="../index.html"><span class="icon fa fa-star fa-spin"></span></a>
+      <a href="../index.html"><span class="txt">ABC</span></a>
+      <a href="../index.html"><span class="txt">XYZ</span></a>
+      <a href="../index.html"><span class="icon fa fa-spinner fa-pulse"></span></a>
+    </div>
+  </nav>
 
-	<!-- コンテンツ -->
-	<div class="content">
-		<div class="gridContent1">
-			<div class="type1">
-				<div class="innerContent center">
-					<div class="text">
-						<h2 class="title">CSS Grid</h2>
-						<p>
-							参考のHP<br/>
-							<a class="btn" href="https://developer.mozilla.org/ja/docs/Web/CSS/CSS_Grid_Layout/Basic_Concepts_of_Grid_Layout">MDNのGrid Layoutの説明</a><br/>
-							<a class="btn" href="https://www.webprofessional.jp/difference-between-auto-fill-and-auto-fit/">auto-fill、and-auto-fitに関する記事</a><br/>
-						</p>
-					</div>
-				</div>
-			</div>
-			<div class="type2">
-				<div class="innerContent center">
-					<div class="text">
-						<h2 class="title">２</h2>
-						<p>
-							Awesome と Google Web Fonts<br/>
-							<a class="btn" href="https://www.pixelimage.jp/blog/2015/07/font_awesome.html">Awesome</a><br/>
-							<a class="btn" href="https://fonts.google.com">Google Web Fonts</a><br/>
-						</p>
-					</div>
-				</div>
-			</div>
-			<div class="type3">
-				<div class="innerContent center">
-					<div class="text">
-						<h2 class="title">３</h2>
-					</div>
-				</div>
-			</div>
-			<div class="type4">
-				<div class="innerContent center">
-					<div class="text">
-						<h2 class="title">４</h2>
-					</div>
-				</div>
-			</div>
-			<div class="type5">
-				<div class="innerContent center">
-					<div class="text">
-						<h2 class="title">５</h2>
-						<p>
-							<a class="btn" href="../index.html">インデックスに戻る</a><br/>
-						</p>
-					</div>
-				</div>
-			</div>
-		</div>
+  <!-- コンテンツ -->
+  <div class="content">
+    <!-- CSS Grid -->
+    <h1>CSS Grid</h1>
+    <div class="gridContent1">
+      <div class="type1">
+        <div class="inner-content center">
+          <h2>１</h2>
+          <p>
+            参考のHP<br/>
+            <a class="btn" href="https://developer.mozilla.org/ja/docs/Web/CSS/CSS_Grid_Layout/Basic_Concepts_of_Grid_Layout">MDNのGrid Layoutの説明</a><br/>
+            <a class="btn" href="https://www.webprofessional.jp/difference-between-auto-fill-and-auto-fit/">auto-fill、and-auto-fitに関する記事</a><br/>
+          </p>
+        </div>
+      </div>
+      <div class="type2">
+        <div class="inner-content center">
+          <h2>２</h2>
+          <p>
+            Awesome と Google Web Fonts<br/>
+            <a class="btn" href="https://www.pixelimage.jp/blog/2015/07/font_awesome.html">Awesome</a><br/>
+            <a class="btn" href="https://fonts.google.com">Google Web Fonts</a><br/>
+          </p>
+        </div>
+      </div>
+      <div class="type3">
+        <div class="inner-content center">
+          <h2>３</h2>
+        </div>
+      </div>
+      <div class="type4">
+        <div class="inner-content center">
+          <h2>４</h2>
+        </div>
+      </div>
+      <div class="type5">
+        <div class="inner-content center">
+          <h2>５</h2>
+          <p>
+            <a class="btn" href="../index.html">インデックスに戻る</a><br/>
+          </p>
+        </div>
+      </div>
+    </div>
 
-		<h2 class="headerTitle">auto-fillのサンプル<br/>広げた時のFill</h2>
-		<div class="gridContent2">
-			<div class="innerContent center">
-				<div class="text">
-					<h2 class="title">１</h2>
-				</div>
-			</div>
-			<div class="innerContent center">
-				<div class="text">
-					<h2 class="title">２</h2>
-				</div>
-			</div>
-			<div class="innerContent center">
-				<div class="text">
-					<h2 class="title">３</h2>
-				</div>
-			</div>
-			<div class="innerContent center">
-				<div class="text">
-					<h2 class="title">４</h2>
-				</div>
-			</div>
-			<div class="innerContent center">
-				<div class="text">
-					<h2 class="title">５</h2>
-				</div>
-			</div>
-		</div>
+    <!-- auto-fill -->
+    <h1>auto-fillのサンプル<br/>広げたり縮めたりした時のFill</h1>
+    <div class="gridContent2">
+      <div class="inner-content center">
+          <h2>１</h2>
+      </div>
+      <div class="inner-content center">
+          <h2>２</h2>
+      </div>
+      <div class="inner-content center">
+          <h2>３</h2>
+      </div>
+      <div class="inner-content center">
+          <h2>４</h2>
+      </div>
+      <div class="inner-content center">
+          <h2>５</h2>
+      </div>
+    </div>
 
-		<h2 class="headerTitle">auto-fitのサンプル<br/>広げた時のFit</h2>
-		<div class="gridContent3">
-			<div class="innerContent center">
-				<div class="text">
-					<h2 class="title">１</h2>
-				</div>
-			</div>
-			<div class="innerContent center">
-				<div class="text">
-					<h2 class="title">２</h2>
-				</div>
-			</div>
-			<div class="innerContent center">
-				<div class="text">
-					<h2 class="title">３</h2>
-				</div>
-			</div>
-			<div class="innerContent center">
-				<div class="text">
-					<h2 class="title">４</h2>
-				</div>
-			</div>
-			<div class="innerContent center">
-				<div class="text">
-					<h2 class="title">５</h2>
-				</div>
-			</div>
-		</div>
-	</div>
+    <!-- auto-fit -->
+    <h1>auto-fitのサンプル<br/>広げたり縮めたりした時のFit</h1>
+    <div class="gridContent3">
+      <div class="inner-content center">
+          <h2>１</h2>
+      </div>
+      <div class="inner-content center">
+          <h2>２</h2>
+      </div>
+      <div class="inner-content center">
+          <h2>３</h2>
+      </div>
+      <div class="inner-content center">
+          <h2>４</h2>
+      </div>
+      <div class="inner-content center">
+          <h2>５</h2>
+      </div>
+    </div>
+  </div>
 </body>
 </html>
