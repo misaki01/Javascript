@@ -25,23 +25,25 @@
     <br/>Chromeに対するCORS対策はコマンドプロンプトからセキュリティ無効のオプションを入れて起動でないとだめ
     <br/>（一旦Chromeを全部落としてからコマンドプロンプトで起動）
     <br/>また、下記のようにScriptを変更する必要もある
-    <pre><code>
-    &lt;script&gt;
-      let wasmfile;
-      const request = new XMLHttpRequest();
-      request.responseType = "blob";
-      request.open("GET", "main.wasm"); // ←wasmファイルの相対パス設定
-      request.addEventListener("load", (event) =&gt; {
-        wasmfile = new Response(event.target.response,{"headers":{'Content-Type':'application/wasm'}});
-        const go = new Go();
-        WebAssembly.instantiateStreaming(wasmfile, go.importObject).then((result) =&gt; {
-          go.run(result.instance);
-        });
+  </p>
+  <pre><code>
+  &lt;script&gt;
+    let wasmfile;
+    const request = new XMLHttpRequest();
+    request.responseType = "blob";
+    request.open("GET", "main.wasm"); // ←wasmファイルの相対パス設定
+    request.addEventListener("load", (event) =&gt; {
+      wasmfile = new Response(event.target.response,{"headers":{'Content-Type':'application/wasm'}});
+      const go = new Go();
+      WebAssembly.instantiateStreaming(wasmfile, go.importObject).then((result) =&gt; {
+        go.run(result.instance);
       });
-      request.send();
-    &lt;/script&gt;
-    </code></pre>
-    <br/>↓C#用 .NET Core/Standard を使用したフレームワーク：Blazor を用いたWebAssembly
+    });
+    request.send();
+  &lt;/script&gt;
+  </code></pre>
+  <p>
+    ↓C#用 .NET Core/Standard を使用したフレームワーク：Blazor を用いたWebAssembly
     <br/><a href="https://qiita.com/proprogrammer0/items/d61587b95ea987318a35">C#用 .NET Core の　Blazor</a>
   </p>
   <hr style="border:4px solid #000000;">
