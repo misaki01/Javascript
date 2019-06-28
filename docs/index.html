@@ -26,7 +26,7 @@
     <br/>（一旦Chromeを全部落としてからコマンドプロンプトで起動）
     <br/>また、下記のようにScriptを変更する必要もある
     <pre><code>
-    &ltscript&gt
+    &lt;script&gt;
       let wasmfile;
       const request = new XMLHttpRequest();
       request.responseType = "blob";
@@ -39,7 +39,7 @@
         });
       });
       request.send();
-    &lt/script&gt
+    &lt;/script&gt;
     </pre></code>
     <br/>↓C#用 .NET Core/Standard を使用したフレームワーク：Blazor を用いたWebAssembly
     <br/><a href="https://qiita.com/proprogrammer0/items/d61587b95ea987318a35">C#用 .NET Core の　Blazor</a>
