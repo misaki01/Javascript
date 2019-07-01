@@ -16,6 +16,35 @@
     <br/><a href="https://jigsaw.w3.org/css-validator/">CSSについてW3Cの規約どおりかチェックしてくれるツール</a>
   </p>
   <hr style="border:4px solid #000000;">
+  <h1>◆Webサイトのデザインサンプル◆</h1>
+  <hr style="border:1px dashed #000000;">
+  <h2>●01：パララックスデザイン</h2>
+  <p>
+    <a href="WebSiteDesign/ParallaxDesign_Scroll.html">1：スクロール</a>　←iPhone系だと背景固定に問題有
+    <br/><a href="WebSiteDesign/ParallaxDesign_Slide.html">2：スライド</a>　←1の問題対応版
+  </p>
+  <hr style="border:1px dashed #000000;">
+  <h2>●02：CSS Grid Layout</h2>
+  <p>
+    <a href="WebSiteDesign/CssGrid.html">1：Grid</a>
+  </p>
+  <hr style="border:4px solid #000000;">
+  <h1>◆進捗表示◆</h1>
+  <p>
+    <a href="Progress/setTimeout.html">パターン１：setTimeout</a>
+    <br/><a href="Progress/Promise.html">パターン２：Promise</a>
+    <br/><a href="Progress/async_await.html">パターン３：async/await</a>
+  </p>
+  <hr style="border:4px solid #000000;">
+  <h1>◆WebSpeechAPI（音声認識、音声合成）◆</h1>
+  <p>
+    ※ほぼ、Chrome専用機能
+    <br/>（音声認識はChromeくらしかサポートしておらず、IEとかは動かない。<br/>　iOSの場合はChromeであっても中身はSafariのため動作しない。）
+  </p>
+  <p>
+    <a href="WebSpeechAPI/SpeechRecognition.html">パターン１：音声認識</a>
+  </p>
+  <hr style="border:4px solid #000000;">
   <h1>◆WebAssemblyのメモ（参考ページ）：サンプルまで作れてない・・・◆</h1>
   <p>
     <a href="https://buildersbox.corp-sansan.com/entry/2019/02/14/113000">Go言語によるWebAssemblyのサンプル（コード有）</a>
@@ -46,34 +75,17 @@
     ↓C#用 .NET Core/Standard を使用したフレームワーク：Blazor を用いたWebAssembly
     <br/><a href="https://qiita.com/proprogrammer0/items/d61587b95ea987318a35">C#用 .NET Core の　Blazor</a>
   </p>
-  <hr style="border:4px solid #000000;">
-  <h1>◆Webサイトのデザインサンプル◆</h1>
-  <hr style="border:1px dashed #000000;">
-  <h2>●01：パララックスデザイン</h2>
   <p>
-    <a href="WebSiteDesign/ParallaxDesign_Scroll.html">1：スクロール</a>　←iPhone系だと背景固定に問題有
-    <br/><a href="WebSiteDesign/ParallaxDesign_Slide.html">2：スライド</a>　←1の問題対応版
-  </p>
-  <hr style="border:1px dashed #000000;">
-  <h2>●02：CSS Grid Layout</h2>
-  <p>
-    <a href="WebSiteDesign/CssGrid.html">1：Grid</a>
-  </p>
-  <hr style="border:4px solid #000000;">
-  <h1>◆進捗表示◆</h1>
-  <p>
-    <a href="Progress/setTimeout.html">パターン１：setTimeout</a>
-    <br/><a href="Progress/Promise.html">パターン２：Promise</a>
-    <br/><a href="Progress/async_await.html">パターン３：async/await</a>
-  </p>
-  <hr style="border:4px solid #000000;">
-  <h1>◆WebSpeechAPI（音声認識、音声合成）◆</h1>
-  <p>
-    ※ほぼ、Chrome専用機能
-    <br/>（音声認識はChromeくらしかサポートしておらず、IEとかは動かない。<br/>　iOSの場合はChromeであっても中身はSafariのため動作しない。）
-  </p>
-  <p>
-    <a href="WebSpeechAPI/SpeechRecognition.html">パターン１：音声認識</a>
+    簡単なWebサーバの立て方（nginxを使用）
+    <br/>詳細は<a href="https://qiita.com/tatuno/items/44ec8130d7544d1534f7">ここのqiitaの記事</a>参照
+    <ol tyoe="1">
+      <li>ダウンロード：<a href="https://qiita.com/proprogrammer0/items/d61587b95ea987318a35">nginx公式DLページ</a></li>
+      <li>ダウンロードしたZipを適用なフォルダに解凍
+          <br/>（注意：解凍するフォルダのパスに日本語（マルチバイト文字）が含まれているとだめ。起動しない。）</li>
+      <li>コマンドプロンプトを起動し解凍したフォルダに移動する。</li>
+      <li>「start nginx」で起動（終了は nginx -s quit）</li>
+    </ol>
+    <br/>備考：WebAssemblyを使うには「conf/mime.types」に「application/wasm wasm;」を追加しないとダメかも
   </p>
   <hr style="border:4px solid #000000;">
 </body>
